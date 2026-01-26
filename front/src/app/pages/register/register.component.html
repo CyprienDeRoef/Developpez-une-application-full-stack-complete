@@ -1,0 +1,70 @@
+<div class="container-fluid min-vh-100">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Back Button in Top Left -->
+  <div class="row">
+    <div class="col-12">
+      <button class="btn btn-link text-dark text-decoration-none px-3 fs-4" (click)="goBack()">←</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+      <div class="px-3 px-md-4">
+        <!-- Mobile: Logo and Title -->
+        <div class="d-md-none text-center mb-4">
+          <img src="/assets/logo_p6.png" alt="MDD Logo" class="mb-3" style="height: 80px;" />
+          <h1 class="h4">Inscription</h1>
+        </div>
+
+        <!-- Desktop: Title -->
+        <div class="d-none d-md-block text-center mb-4">
+          <h1 class="h3">Inscription</h1>
+        </div>
+
+        <!-- Register Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label fw-medium">Nom d'utilisateur</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              formControlName="username"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label fw-medium">Adresse e-mail</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <label for="password" class="form-label fw-medium">Mot de passe</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              formControlName="password"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5 py-2">S'inscrire</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
