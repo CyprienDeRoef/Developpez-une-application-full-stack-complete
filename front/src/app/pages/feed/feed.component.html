@@ -1,0 +1,57 @@
+<div class="container-fluid min-vh-100">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center px-3 mb-4">
+        <!-- Create Article Button -->
+        <button class="btn btn-primary" (click)="createArticle()">
+          Créer un article
+        </button>
+
+        <!-- Sort Button -->
+        <button class="btn btn-outline-secondary" (click)="sortPosts()">
+          Trier par <span class="ms-1">↓</span>
+        </button>
+      </div>
+
+      <!-- Posts Grid -->
+      <div class="row px-3">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && posts.length === 0" class="col-12 text-center py-5">
+          <p class="text-muted">Aucun article pour le moment</p>
+        </div>
+
+        <!-- Posts -->
+        <div *ngFor="let post of posts" class="col-12 col-md-6 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <div class="d-flex justify-content-between text-muted small mb-2">
+                <span>{{ post.createdAt | date: 'dd/MM/yyyy' }}</span>
+                <span>{{ post.authorName }}</span>
+              </div>
+              <p class="card-text">
+                {{ post.content.length > 200 ? (post.content | slice:0:200) + '...' : post.content }}
+              </p>
+              <div class="d-flex flex-wrap gap-1">
+                <span *ngFor="let topic of post.topicNames" class="badge bg-secondary">
+                  {{ topic }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
