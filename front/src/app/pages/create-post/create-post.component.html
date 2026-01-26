@@ -1,0 +1,57 @@
+<div class="container-fluid min-vh-100">
+  <app-header></app-header>
+  
+  <div class="row justify-content-center mt-4">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-link text-dark text-decoration-none p-0" (click)="goBack()">
+          <span style="font-size: 24px;">←</span>
+        </button>
+        <h1 class="text-center flex-grow-1 mb-0">Créer un nouvel article</h1>
+      </div>
+
+      <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <select formControlName="topicId" class="form-select" id="topic">
+            <option value="" disabled selected>Sélectionner un thème</option>
+            <option *ngFor="let topic of topics" [value]="topic.id">
+              {{ topic.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="text"
+            formControlName="title"
+            class="form-control"
+            placeholder="Titre de l'article"
+          />
+        </div>
+
+        <div class="mb-3">
+          <textarea
+            formControlName="content"
+            class="form-control"
+            placeholder="Contenu de l'article"
+            rows="10"
+          ></textarea>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="text-center">
+          <button 
+            type="submit" 
+            class="btn btn-primary px-5"
+            [disabled]="!postForm.valid || isLoading"
+          >
+            {{ isLoading ? 'Création...' : 'Créer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

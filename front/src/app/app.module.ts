@@ -13,6 +13,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { FeedComponent } from './pages/feed/feed.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
+import { TopicsComponent } from './pages/topics/topics.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CreatePostComponent } from './pages/create-post/create-post.component';
     HeaderComponent,
     FeedComponent,
     CreatePostComponent,
+    TopicsComponent,
   ],
   imports: [
     BrowserModule,
