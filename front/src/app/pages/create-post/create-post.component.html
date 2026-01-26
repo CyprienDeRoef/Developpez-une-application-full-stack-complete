@@ -12,12 +12,42 @@
 
       <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <select formControlName="topicId" class="form-select" id="topic">
-            <option value="" disabled selected>Sélectionner un thème</option>
-            <option *ngFor="let topic of topics" [value]="topic.id">
+          <div class="input-group">
+            <select formControlName="topicId" class="form-select" id="topic">
+              <option value="" disabled selected>Sélectionner un thème</option>
+              <option *ngFor="let topic of topics" [value]="topic.id">
+                {{ topic.name }}
+              </option>
+            </select>
+            <button 
+              type="button" 
+              class="btn btn-outline-primary" 
+              (click)="addTopic()"
+              [disabled]="!postForm.value.topicId"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Topics -->
+        <div class="mb-3" *ngIf="selectedTopics.length > 0">
+          <div class="d-flex flex-wrap gap-2">
+            <span 
+              *ngFor="let topic of selectedTopics" 
+              class="badge bg-primary d-flex align-items-center gap-2"
+              style="font-size: 14px; padding: 8px 12px;"
+            >
               {{ topic.name }}
-            </option>
-          </select>
+              <button 
+                type="button" 
+                class="btn-close btn-close-white" 
+                aria-label="Remove"
+                (click)="removeTopic(topic)"
+                style="font-size: 10px;"
+              ></button>
+            </span>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -46,7 +76,7 @@
           <button 
             type="submit" 
             class="btn btn-primary px-5"
-            [disabled]="!postForm.valid || isLoading"
+            [disabled]="!postForm.valid || selectedTopics.length === 0 || isLoading"
           >
             {{ isLoading ? 'Création...' : 'Créer' }}
           </button>

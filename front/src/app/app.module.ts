@@ -14,6 +14,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { FeedComponent } from './pages/feed/feed.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
 import { TopicsComponent } from './pages/topics/topics.component';
+import { PostDetailComponent } from './pages/post-detail/post-detail.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { TopicsComponent } from './pages/topics/topics.component';
     FeedComponent,
     CreatePostComponent,
     TopicsComponent,
+    PostDetailComponent,
   ],
   imports: [
     BrowserModule,

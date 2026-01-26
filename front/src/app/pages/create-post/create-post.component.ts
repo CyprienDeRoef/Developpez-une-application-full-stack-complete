@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
-import { TopicService, Topic } from '../../services/topic.service';
+import { TopicService } from '../../services/topic.service';
+import { Topic } from 'src/app/interfaces/topic.interface';
 
 @Component({
   selector: 'app-create-post',
@@ -12,6 +13,7 @@ import { TopicService, Topic } from '../../services/topic.service';
 export class CreatePostComponent implements OnInit {
   postForm!: FormGroup;
   topics: Topic[] = [];
+  selectedTopics: Topic[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
 
@@ -24,7 +26,7 @@ export class CreatePostComponent implements OnInit {
 
   ngOnInit(): void {
     this.postForm = this.fb.group({
-      topicId: ['', Validators.required],
+      topicId: [''],
       title: ['', [Validators.required, Validators.minLength(3)]],
       content: ['', [Validators.required, Validators.minLength(10)]],
     });
@@ -44,19 +46,34 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
+  addTopic(): void {
+    const topicId = this.postForm.value.topicId;
+    if (topicId) {
+      const topic = this.topics.find((t) => t.id === parseInt(topicId));
+      if (topic && !this.selectedTopics.find((t) => t.id === topic.id)) {
+        this.selectedTopics.push(topic);
+        this.postForm.patchValue({ topicId: '' });
+      }
+    }
+  }
+
+  removeTopic(topic: Topic): void {
+    this.selectedTopics = this.selectedTopics.filter((t) => t.id !== topic.id);
+  }
+
   goBack(): void {
     this.router.navigate(['/feed']);
   }
 
   onSubmit(): void {
-    if (this.postForm.valid) {
+    if (this.postForm.valid && this.selectedTopics.length > 0) {
       this.isLoading = true;
       this.errorMessage = '';
 
       const request = {
         title: this.postForm.value.title,
         content: this.postForm.value.content,
-        topicIds: [parseInt(this.postForm.value.topicId)],
+        topicIds: this.selectedTopics.map((t) => t.id),
       };
 
       this.postService.create(request).subscribe({
@@ -72,6 +89,8 @@ export class CreatePostComponent implements OnInit {
             "Une erreur est survenue lors de la création de l'article";
         },
       });
+    } else if (this.selectedTopics.length === 0) {
+      this.errorMessage = 'Veuillez sélectionner au moins un thème';
     }
   }
 }

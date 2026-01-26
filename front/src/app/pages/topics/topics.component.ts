@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TopicService, Topic } from '../../services/topic.service';
+import { TopicService } from '../../services/topic.service';
+import { Topic } from 'src/app/interfaces/topic.interface';
 
 @Component({
   selector: 'app-topics',
@@ -35,7 +36,7 @@ export class TopicsComponent implements OnInit {
     this.topicService.getUserSubscriptions().subscribe({
       next: (subscribedTopics) => {
         this.subscribedTopicIds = new Set(
-          subscribedTopics.map((topic) => topic.id)
+          subscribedTopics.map((topic) => topic.id),
         );
       },
       error: (error) => {
