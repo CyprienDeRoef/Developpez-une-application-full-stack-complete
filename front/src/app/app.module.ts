@@ -15,6 +15,7 @@ import { FeedComponent } from './pages/feed/feed.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
 import { TopicsComponent } from './pages/topics/topics.component';
 import { PostDetailComponent } from './pages/post-detail/post-detail.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { PostDetailComponent } from './pages/post-detail/post-detail.component';
     CreatePostComponent,
     TopicsComponent,
     PostDetailComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
