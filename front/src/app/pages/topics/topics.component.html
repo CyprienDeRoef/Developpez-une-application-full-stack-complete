@@ -1,0 +1,47 @@
+<div class="container-fluid min-vh-100">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && topics.length === 0" class="text-center py-5">
+      <p class="text-muted">Aucun thème disponible</p>
+    </div>
+
+    <!-- Topics Grid -->
+    <div class="row g-4">
+      <div *ngFor="let topic of topics" class="col-12 col-md-6">
+        <div class="card h-100 p-4">
+          <h5 class="card-title fw-bold mb-3">{{ topic.name }}</h5>
+          <p class="card-text text-muted mb-4">
+            Description: {{ topic.description }}
+          </p>
+          <div class="mt-auto text-center">
+            <button
+              *ngIf="!isSubscribed(topic.id)"
+              class="btn btn-primary px-5"
+              (click)="toggleSubscription(topic)"
+            >
+              S'abonner
+            </button>
+            <button
+              *ngIf="isSubscribed(topic.id)"
+              class="btn btn-secondary px-5"
+              (click)="toggleSubscription(topic)"
+            >
+              Déjà abonné
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
