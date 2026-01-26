@@ -1,5 +1,19 @@
-<div class="row border-bottom">
-    <div class="py-1 px-3">
+<div class="border-bottom">
+  <div class="d-flex align-items-center justify-content-between px-4 py-2">
+    <div>
       <img src="/assets/logo_p6.png" alt="MDD Logo" style="height: 60px;" />
+    </div>
+    
+    <nav *ngIf="isAuthenticated()" class="d-flex gap-4">
+      <a routerLink="/feed" routerLinkActive="fw-bold text-primary" class="text-decoration-none text-dark">Articles</a>
+      <a routerLink="/topics" routerLinkActive="fw-bold text-primary" class="text-decoration-none text-dark">Thèmes</a>
+    </nav>
+    
+    <div class="d-flex align-items-center gap-3" *ngIf="isAuthenticated()">
+      <button class="btn btn-link text-danger text-decoration-none p-2" (click)="logout()">Se déconnecter</button>
+      <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+        <span style="font-size: 24px;">👤</span>
+      </div>
+    </div>
   </div>
 </div>
