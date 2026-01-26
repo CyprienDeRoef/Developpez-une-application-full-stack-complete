@@ -3,10 +3,13 @@ package com.openclassrooms.mddapi.controllers;
 import com.openclassrooms.mddapi.dto.JwtResponse;
 import com.openclassrooms.mddapi.dto.LoginRequest;
 import com.openclassrooms.mddapi.dto.RegisterRequest;
+import com.openclassrooms.mddapi.dto.UpdateProfileRequest;
+import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.entities.User;
 import com.openclassrooms.mddapi.services.auth.RegisterService;
 import com.openclassrooms.mddapi.services.auth.LoginService;
 import com.openclassrooms.mddapi.services.auth.CurrentUserService;
+import com.openclassrooms.mddapi.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,6 +38,9 @@ public class AuthController {
 
     @Autowired
     private CurrentUserService currentUserService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Register a new user
@@ -98,5 +104,24 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout() {
         return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
+
+    /**
+     * Update user profile
+     * 
+     * @param updateRequest the update request data
+     * @return updated user information
+     */
+    @Operation(summary = "Mise à jour du profil", description = "Met à jour le profil de l'utilisateur connecté", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profil mis à jour", content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "Données invalides", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Non autorisé", content = @Content)
+    })
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> updateProfile(@Valid @RequestBody UpdateProfileRequest updateRequest) {
+        User currentUser = currentUserService.getCurrentUser();
+        UserDto updatedUser = userService.updateProfile(currentUser.getId(), updateRequest);
+        return ResponseEntity.ok(updatedUser);
     }
 }
