@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Schema(description = "Entité utilisateur")
 @Entity
@@ -43,6 +45,12 @@ public class User implements UserDetails {
     @Schema(description = "Date de dernière mise à jour", example = "2024-01-20T14:45:00")
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Schema(hidden = true)
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_subscriptions", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private List<Topic> subscriptions = new ArrayList<>();
 
     public User() {
     }
@@ -107,6 +115,14 @@ public class User implements UserDetails {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Topic> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Topic> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     // UserDetails implementation

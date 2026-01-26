@@ -40,11 +40,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(
             @Parameter(description = "ID de l'utilisateur", required = true) @PathVariable @NonNull Long id) {
-        try {
-            UserDto user = userService.getUserById(id);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        UserDto user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 }

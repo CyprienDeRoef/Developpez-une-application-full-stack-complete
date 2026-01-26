@@ -49,12 +49,8 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<JwtResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        try {
-            JwtResponse response = registerService.registerUser(registerRequest);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        JwtResponse response = registerService.registerUser(registerRequest);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -70,12 +66,8 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            JwtResponse response = loginService.authenticateUser(loginRequest);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        JwtResponse response = loginService.authenticateUser(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -90,12 +82,8 @@ public class AuthController {
     })
     @GetMapping("/me")
     public ResponseEntity<User> getCurrentUser() {
-        try {
-            User user = currentUserService.getCurrentUser();
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(401).build();
-        }
+        User user = currentUserService.getCurrentUser();
+        return ResponseEntity.ok(user);
     }
 
     /**
