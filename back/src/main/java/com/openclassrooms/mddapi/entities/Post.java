@@ -26,11 +26,11 @@ public class Post {
 
     @Schema(description = "Auteur du post")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @Schema(description = "Sujets du post")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "post_topics", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
     private List<Topic> topics = new ArrayList<>();
 

@@ -61,7 +61,12 @@ public class PostService {
             throw new BadRequestException("No valid topics found");
         }
 
-        Post post = new Post(request.getTitle(), request.getContent(), author, topics);
+        Post post = new Post();
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setAuthor(author);
+        post.setTopics(topics);
+
         Post savedPost = postRepository.save(post);
         return convertToResponse(savedPost);
     }
