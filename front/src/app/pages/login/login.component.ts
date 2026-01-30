@@ -39,19 +39,24 @@ export class LoginComponent implements OnInit {
 
       this.authService.login(loginRequest).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
           this.isLoading = false;
           // Navigate to feed page after successful login
           this.router.navigate(['/feed']);
         },
         error: (error) => {
-          console.error('Login error:', error);
           this.isLoading = false;
-          if (error.status === 400 || error.status === 401) {
-            this.errorMessage = 'Invalid email or password.';
+
+          // Display backend error message if available
+          if (error.error?.message) {
+            this.errorMessage = error.error.message;
+          } else if (error.status === 400 || error.status === 401) {
+            this.errorMessage = 'Email ou mot de passe incorrect';
+          } else if (error.status === 0) {
+            this.errorMessage =
+              'Impossible de se connecter au serveur. Veuillez réessayer plus tard.';
           } else {
             this.errorMessage =
-              'An error occurred during login. Please try again.';
+              'Une erreur est survenue lors de la connexion. Veuillez réessayer.';
           }
         },
       });

@@ -24,7 +24,7 @@ export class TopicService {
    * @param id - Topic ID
    * @returns Observable with topic details
    */
-  public detail(id: string): Observable<Topic> {
+  public detail(id: number): Observable<Topic> {
     return this.httpClient.get<Topic>(`${this.pathService}/${id}`);
   }
 
@@ -33,7 +33,7 @@ export class TopicService {
    * @param topicId - Topic ID to subscribe to
    * @returns Observable<void>
    */
-  public subscribe(topicId: string): Observable<void> {
+  public subscribe(topicId: number): Observable<void> {
     return this.httpClient.post<void>(
       `${this.pathService}/${topicId}/subscribe`,
       {},
@@ -45,7 +45,7 @@ export class TopicService {
    * @param topicId - Topic ID to unsubscribe from
    * @returns Observable<void>
    */
-  public unsubscribe(topicId: string): Observable<void> {
+  public unsubscribe(topicId: number): Observable<void> {
     return this.httpClient.delete<void>(
       `${this.pathService}/${topicId}/subscribe`,
     );

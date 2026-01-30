@@ -58,7 +58,7 @@ export class TopicsComponent implements OnInit {
   }
 
   subscribe(topic: Topic): void {
-    this.topicService.subscribe(topic.id.toString()).subscribe({
+    this.topicService.subscribe(topic.id).subscribe({
       next: () => {
         this.subscribedTopicIds.add(topic.id);
       },
@@ -69,7 +69,7 @@ export class TopicsComponent implements OnInit {
   }
 
   unsubscribe(topic: Topic): void {
-    this.topicService.unsubscribe(topic.id.toString()).subscribe({
+    this.topicService.unsubscribe(topic.id).subscribe({
       next: () => {
         this.subscribedTopicIds.delete(topic.id);
       },

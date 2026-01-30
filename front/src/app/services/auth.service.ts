@@ -85,4 +85,17 @@ export class AuthService {
   public getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  /**
+   * Update user profile
+   * @param updateData Profile update data (name, email, password)
+   * @returns Observable with updated user data
+   */
+  public updateProfile(updateData: {
+    name?: string;
+    email?: string;
+    password?: string;
+  }): Observable<User> {
+    return this.httpClient.put<User>(`${this.pathService}/me`, updateData);
+  }
 }
