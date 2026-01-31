@@ -57,6 +57,22 @@ export class CreatePostComponent implements OnInit {
     }
   }
 
+  onTopicIdChange(topicId: string): void {
+    this.postForm.patchValue({ topicId });
+  }
+
+  onTopicAdded(topicId: number): void {
+    const topic = this.topics.find((t) => t.id === topicId);
+    if (topic && !this.selectedTopics.find((t) => t.id === topic.id)) {
+      this.selectedTopics.push(topic);
+      this.postForm.patchValue({ topicId: '' });
+    }
+  }
+
+  onTopicRemoved(topic: Topic): void {
+    this.removeTopic(topic);
+  }
+
   removeTopic(topic: Topic): void {
     this.selectedTopics = this.selectedTopics.filter((t) => t.id !== topic.id);
   }

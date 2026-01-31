@@ -1,70 +1,59 @@
 <app-header></app-header>
 
-<div class="container py-5">
+<main class="container py-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6">
       
       <!-- Profile Form Section -->
-      <div class="text-center mb-5">
+      <section class="text-center mb-5" aria-label="Formulaire de profil">
         <h2 class="mb-4">Profil utilisateur</h2>
 
         <!-- Success Message -->
-        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-          {{ successMessage }}
-          <button type="button" class="btn-close" (click)="successMessage = null"></button>
-        </div>
+        <app-alert-message 
+          type="success" 
+          [message]="successMessage" 
+          (dismissed)="successMessage = null">
+        </app-alert-message>
 
         <!-- Error Message -->
-        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-          {{ error }}
-          <button type="button" class="btn-close" (click)="error = null"></button>
-        </div>
+        <app-alert-message 
+          type="danger" 
+          [message]="error" 
+          (dismissed)="error = null">
+        </app-alert-message>
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
           <!-- Name Field -->
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control form-control-lg rounded-3"
-              id="name"
-              formControlName="name"
-              placeholder="Username"
-              [class.is-invalid]="profileForm.get('name')?.invalid && profileForm.get('name')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
-              Le nom doit contenir au moins 3 caractères
-            </div>
-          </div>
+          <app-form-field
+            [formGroup]="profileForm"
+            controlName="name"
+            label=""
+            type="text"
+            placeholder="Username"
+            id="name"
+            [errorMessages]="{'minlength': 'Le nom doit contenir au moins 3 caractères'}">
+          </app-form-field>
 
           <!-- Email Field -->
-          <div class="mb-3">
-            <input
-              type="email"
-              class="form-control form-control-lg rounded-3"
-              id="email"
-              formControlName="email"
-              placeholder="email@email.fr"
-              [class.is-invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
-              Veuillez entrer un email valide
-            </div>
-          </div>
+          <app-form-field
+            [formGroup]="profileForm"
+            controlName="email"
+            label=""
+            type="email"
+            placeholder="email@email.fr"
+            id="email">
+          </app-form-field>
 
           <!-- Password Field -->
-          <div class="mb-4">
-            <input
-              type="password"
-              class="form-control form-control-lg rounded-3"
-              id="password"
-              formControlName="password"
-              placeholder="Mot de passe"
-              [class.is-invalid]="profileForm.get('password')?.invalid && profileForm.get('password')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="profileForm.get('password')?.invalid && profileForm.get('password')?.touched">
-              Le mot de passe doit contenir au moins 8 caractères
-            </div>
-          </div>
+          <app-form-field
+            [formGroup]="profileForm"
+            controlName="password"
+            label=""
+            type="password"
+            placeholder="Mot de passe"
+            id="password"
+            [errorMessages]="{'minlength': 'Le mot de passe doit contenir au moins 8 caractères'}">
+          </app-form-field>
 
           <!-- Submit Button -->
           <button
@@ -77,12 +66,12 @@
             Sauvegarder
           </button>
         </form>
-      </div>
+      </section>
 
       <hr class="my-5">
 
       <!-- Subscriptions Section -->
-      <div>
+      <section aria-label="Mes abonnements">
         <h3 class="mb-4 text-center">Abonnements</h3>
 
         <div *ngIf="subscriptions.length === 0" class="text-center text-muted py-4">
@@ -91,23 +80,15 @@
 
         <div class="row g-3">
           <div class="col-12 col-md-6" *ngFor="let topic of subscriptions">
-            <div class="p-3 bg-light rounded-3">
-              <h5 class="mb-2">{{ topic.name }}</h5>
-              <p class="text-muted mb-3" style="font-size: 0.9rem;">
-                Description: {{ topic.description }}
-              </p>
-              <button
-                class="btn btn-primary rounded-3"
-                (click)="unsubscribe(topic.id)"
-                style="background-color: #7c5cbf; border-color: #7c5cbf;"
-              >
-                Se désabonner
-              </button>
-            </div>
+            <app-topic-card 
+              [topic]="topic" 
+              [mode]="'unsubscribe'"
+              (actionClicked)="unsubscribe($event.id)">
+            </app-topic-card>
           </div>
         </div>
-      </div>
+      </section>
 
     </div>
   </div>
-</div>
+</main>

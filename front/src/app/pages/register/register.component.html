@@ -2,16 +2,13 @@
   <!-- Header -->
   <app-header></app-header>
 
-  <!-- Back Button in Top Left -->
-  <div class="row">
-    <div class="col-12">
-      <button class="btn btn-link text-dark text-decoration-none px-3 fs-4" (click)="goBack()">←</button>
-    </div>
-  </div>
-
   <!-- Main Content -->
-  <div class="row justify-content-center">
+  <main class="row justify-content-center">
     <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+
+    <!-- Back Button in Top Left -->
+    <app-back-button position="top-left" (backClicked)="goBack()"></app-back-button>
+
       <div class="px-3 px-md-4">
         <!-- Mobile: Logo and Title -->
         <div class="d-md-none text-center mb-4">
@@ -27,42 +24,34 @@
         <!-- Register Form -->
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <!-- Error Message -->
-          <div class="alert alert-danger mb-3" *ngIf="errorMessage" role="alert">
-            {{ errorMessage }}
-          </div>
+          <app-alert-message type="danger" [message]="errorMessage"></app-alert-message>
 
           <!-- Name -->
-          <div class="mb-3">
-            <label for="name" class="form-label fw-medium">Nom</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              formControlName="name"
-            />
-          </div>
+          <app-form-field
+            [formGroup]="registerForm"
+            controlName="name"
+            label="Nom"
+            type="text"
+            id="name">
+          </app-form-field>
 
           <!-- Email -->
-          <div class="mb-3">
-            <label for="email" class="form-label fw-medium">Adresse e-mail</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              formControlName="email"
-            />
-          </div>
+          <app-form-field
+            [formGroup]="registerForm"
+            controlName="email"
+            label="Adresse e-mail"
+            type="email"
+            id="email">
+          </app-form-field>
 
           <!-- Password -->
-          <div class="mb-4">
-            <label for="password" class="form-label fw-medium">Mot de passe</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              formControlName="password"
-            />
-          </div>
+          <app-form-field
+            [formGroup]="registerForm"
+            controlName="password"
+            label="Mot de passe"
+            type="password"
+            id="password">
+          </app-form-field>
 
           <!-- Submit Button -->
           <div class="text-center">
@@ -81,5 +70,5 @@
         </form>
       </div>
     </div>
-  </div>
+  </main>
 </div>

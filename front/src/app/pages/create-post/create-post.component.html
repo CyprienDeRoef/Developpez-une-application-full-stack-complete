@@ -1,54 +1,24 @@
 <div class="container-fluid min-vh-100">
   <app-header></app-header>
   
-  <div class="row justify-content-center mt-4">
+  <main class="row justify-content-center mt-4">
     <div class="col-12 col-md-8 col-lg-6">
-      <div class="d-flex align-items-center mb-4">
-        <button class="btn btn-link text-dark text-decoration-none p-0" (click)="goBack()">
-          <span style="font-size: 24px;">←</span>
-        </button>
-        <h1 class="text-center flex-grow-1 mb-0">Créer un nouvel article</h1>
-      </div>
+      <app-form-header 
+        title="Créer un nouvel article" 
+        [showBackButton]="true"
+        [centered]="true"
+        (backClicked)="goBack()">
+      </app-form-header>
 
       <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <div class="input-group">
-            <select formControlName="topicId" class="form-select" id="topic">
-              <option value="" disabled selected>Sélectionner un thème</option>
-              <option *ngFor="let topic of topics" [value]="topic.id">
-                {{ topic.name }}
-              </option>
-            </select>
-            <button 
-              type="button" 
-              class="btn btn-outline-primary" 
-              (click)="addTopic()"
-              [disabled]="!postForm.value.topicId"
-            >
-              Ajouter
-            </button>
-          </div>
-        </div>
-
-        <!-- Selected Topics -->
-        <div class="mb-3" *ngIf="selectedTopics.length > 0">
-          <div class="d-flex flex-wrap gap-2">
-            <span 
-              *ngFor="let topic of selectedTopics" 
-              class="badge bg-primary d-flex align-items-center gap-2"
-              style="font-size: 14px; padding: 8px 12px;"
-            >
-              {{ topic.name }}
-              <button 
-                type="button" 
-                class="btn-close btn-close-white" 
-                aria-label="Remove"
-                (click)="removeTopic(topic)"
-                style="font-size: 10px;"
-              ></button>
-            </span>
-          </div>
-        </div>
+        <app-topic-selector
+          [topics]="topics"
+          [selectedTopics]="selectedTopics"
+          [topicId]="postForm.value.topicId"
+          (topicIdChange)="onTopicIdChange($event)"
+          (topicAdded)="onTopicAdded($event)"
+          (topicRemoved)="onTopicRemoved($event)">
+        </app-topic-selector>
 
         <div class="mb-3">
           <input
@@ -68,9 +38,7 @@
           ></textarea>
         </div>
 
-        <div class="alert alert-danger" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
+        <app-alert-message type="danger" [message]="errorMessage"></app-alert-message>
 
         <div class="text-center">
           <button 
@@ -83,5 +51,5 @@
         </div>
       </form>
     </div>
-  </div>
+  </main>
 </div>

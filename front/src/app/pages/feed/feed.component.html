@@ -3,17 +3,17 @@
   <app-header></app-header>
 
   <!-- Main Content -->
-  <div class="container">
+  <main class="container">
     <div class="row mt-4">
       <div class="col-12">
         <!-- No Subscriptions Suggestion -->
-        <div *ngIf="!hasSubscriptions && !isLoading" class="text-center mb-4">
+        <aside *ngIf="!hasSubscriptions && !isLoading" class="text-center mb-4">
           <p class="text-muted">
             Vous n'êtes abonné à aucun thème. <a routerLink="/topics" class="text-primary">Découvrez nos thèmes</a> pour personnaliser votre fil d'actualité.
           </p>
-        </div>
+        </aside>
 
-        <div class="d-flex justify-content-between align-items-center px-3 mb-4">
+        <nav class="d-flex justify-content-between align-items-center px-3 mb-4" aria-label="Actions du fil d'actualité">
         <!-- Create Article Button -->
         <button class="btn btn-primary" (click)="createArticle()">
           Créer un article
@@ -23,15 +23,13 @@
         <button class="btn btn-outline-secondary" (click)="sortPosts()">
           {{ sortDescending ? 'Plus récent' : 'Plus ancien' }} <span class="ms-1">{{ sortDescending ? '↓' : '↑' }}</span>
         </button>
-      </div>
+      </nav>
 
       <!-- Posts Grid -->
-      <div class="row px-3">
+      <section class="row px-3" aria-label="Liste des articles">
         <!-- Loading State -->
-        <div *ngIf="isLoading" class="col-12 text-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Chargement...</span>
-          </div>
+        <div *ngIf="isLoading" class="col-12">
+          <app-loading-spinner></app-loading-spinner>
         </div>
 
         <!-- Empty State -->
@@ -44,23 +42,7 @@
 
         <!-- Posts -->
         <div *ngFor="let post of displayedPosts" class="col-12 col-md-6 mb-4">
-          <div class="card h-100 shadow-sm bg-light" style="cursor: pointer;" [routerLink]="['/post', post.id]">
-            <div class="card-body">
-              <h5 class="card-title fw-bold fs-6">{{ post.title }}</h5>
-              <div class="d-flex justify-content-between text-muted small mb-2">
-                <span>{{ post.createdAt | date: 'dd/MM/yyyy' }}</span>
-                <span>{{ post.authorName }}</span>
-              </div>
-              <p class="card-text">
-                {{ post.content.length > 200 ? (post.content | slice:0:200) + '...' : post.content }}
-              </p>
-              <div class="d-flex flex-wrap gap-1">
-                <span *ngFor="let topic of post.topicNames" class="badge bg-secondary">
-                  {{ topic }}
-                </span>
-              </div>
-            </div>
-          </div>
+          <app-post-card [post]="post"></app-post-card>
         </div>
 
         <!-- Show More Articles Toggle (only if user has subscriptions) -->
@@ -69,7 +51,8 @@
             {{ showAllPosts ? 'Voir mes abonnements uniquement' : 'Voir plus d\'articles' }}
           </button>
         </div>
-      </div>
+      </section>
     </div>
   </div>
+  </main>
 </div>
