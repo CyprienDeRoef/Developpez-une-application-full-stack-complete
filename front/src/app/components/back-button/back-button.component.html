@@ -1,0 +1,20 @@
+<nav *ngIf="position === 'top-left'" class="row" aria-label="Navigation retour">
+  <div class="col-12 px-3 mt-2">
+    <button 
+      class="btn btn-link text-dark text-decoration-none p-0 fs-4" 
+      (click)="onBackClick()"
+      aria-label="Retour"
+    >
+      {{ label }}
+    </button>
+  </div>
+</nav>
+
+<button 
+  *ngIf="position === 'inline'" 
+  class="btn btn-link text-dark text-decoration-none p-0 me-3" 
+  (click)="onBackClick()"
+  aria-label="Retour"
+>
+  <span style="font-size: 24px;">{{ label }}</span>
+</button>

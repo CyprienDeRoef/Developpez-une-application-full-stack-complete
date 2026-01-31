@@ -1,0 +1,15 @@
+<div class="card h-100 p-4 bg-light">
+  <h5 class="card-title fw-bold mb-3 fs-6">{{ topic.name }}</h5>
+  <p class="card-text text-muted mb-4" *ngIf="showDescription">
+    Description: {{ topic.description }}
+  </p>
+  <div class="mt-auto text-center">
+    <button
+      class="btn px-5 rounded-3"
+      [ngClass]="buttonClass"
+      (click)="onActionClick()"
+    >
+      {{ buttonText }}
+    </button>
+  </div>
+</div>

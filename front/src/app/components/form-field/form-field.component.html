@@ -1,0 +1,15 @@
+<div class="mb-3">
+  <label [for]="fieldId" class="form-label fw-medium">{{ label }}</label>
+  <input
+    [type]="type"
+    class="form-control"
+    [class.form-control-lg]="type !== 'password'"
+    [class.is-invalid]="isInvalid"
+    [id]="fieldId"
+    [formControl]="$any(control)"
+    [placeholder]="placeholder"
+  />
+  <div class="invalid-feedback" *ngIf="isInvalid">
+    {{ errorMessage }}
+  </div>
+</div>

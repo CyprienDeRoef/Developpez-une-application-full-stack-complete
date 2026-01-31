@@ -1,0 +1,12 @@
+<div class="d-flex align-items-center mb-4" [class.justify-content-center]="!showBackButton && centered">
+  <button 
+    *ngIf="showBackButton"
+    class="btn btn-link text-dark text-decoration-none p-0 me-3" 
+    (click)="onBackClick()"
+  >
+    <span style="font-size: 24px;">←</span>
+  </button>
+  <h1 class="mb-0" [class.text-center]="centered" [class.flex-grow-1]="showBackButton && centered">
+    {{ title }}
+  </h1>
+</div>

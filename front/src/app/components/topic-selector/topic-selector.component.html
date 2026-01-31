@@ -1,0 +1,44 @@
+<div>
+  <div class="mb-3">
+    <div class="input-group">
+      <select 
+        class="form-select" 
+        [value]="topicId || ''"
+        (change)="onTopicChange($any($event.target).value)"
+      >
+        <option value="" disabled selected>Sélectionner un thème</option>
+        <option *ngFor="let topic of topics" [value]="topic.id">
+          {{ topic.name }}
+        </option>
+      </select>
+      <button 
+        type="button" 
+        class="btn btn-outline-primary" 
+        (click)="onAddTopic()"
+        [disabled]="!topicId"
+      >
+        Ajouter
+      </button>
+    </div>
+  </div>
+
+  <!-- Selected Topics -->
+  <div class="mb-3" *ngIf="selectedTopics.length > 0">
+    <div class="d-flex flex-wrap gap-2">
+      <span 
+        *ngFor="let topic of selectedTopics" 
+        class="badge bg-primary d-flex align-items-center gap-2"
+        style="font-size: 14px; padding: 8px 12px;"
+      >
+        {{ topic.name }}
+        <button 
+          type="button" 
+          class="btn-close btn-close-white" 
+          aria-label="Remove"
+          (click)="onRemoveTopic(topic)"
+          style="font-size: 10px;"
+        ></button>
+      </span>
+    </div>
+  </div>
+</div>

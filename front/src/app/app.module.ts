@@ -16,6 +16,16 @@ import { CreatePostComponent } from './pages/create-post/create-post.component';
 import { TopicsComponent } from './pages/topics/topics.component';
 import { PostDetailComponent } from './pages/post-detail/post-detail.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { PostCardComponent } from './components/post-card/post-card.component';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { AlertMessageComponent } from './components/alert-message/alert-message.component';
+import { TopicCardComponent } from './components/topic-card/topic-card.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { CommentFormComponent } from './components/comment-form/comment-form.component';
+import { TopicSelectorComponent } from './components/topic-selector/topic-selector.component';
+import { FormHeaderComponent } from './components/form-header/form-header.component';
+import { FormFieldComponent } from './components/form-field/form-field.component';
+import { BackButtonComponent } from './components/back-button/back-button.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +39,16 @@ import { ProfileComponent } from './pages/profile/profile.component';
     TopicsComponent,
     PostDetailComponent,
     ProfileComponent,
+    PostCardComponent,
+    LoadingSpinnerComponent,
+    AlertMessageComponent,
+    TopicCardComponent,
+    CommentComponent,
+    CommentFormComponent,
+    TopicSelectorComponent,
+    FormHeaderComponent,
+    FormFieldComponent,
+    BackButtonComponent,
   ],
   imports: [
     BrowserModule,
