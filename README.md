@@ -4,403 +4,28 @@ Application full-stack permettant aux développeurs de s'abonner à des thèmes 
 
 ## Table des matières
 
-- [Architecture](#architecture)
-  - [Architecture Backend](#architecture-backend)
-  - [Architecture Frontend](#architecture-frontend)
-  - [Sécurité des données](#sécurité-des-données)
 - [Prérequis](#prérequis)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Démarrage](#démarrage)
-- [Structure du code](#structure-du-code)
-  - [Structure Backend](#structure-backend)
-  - [Structure Frontend](#structure-frontend)
-- [Conventions de code](#conventions-de-code)
 - [Documentation API](#documentation-api)
   - [Authentification](#authentification)
   - [Thèmes](#thèmes)
   - [Articles](#articles)
   - [Commentaires](#commentaires)
   - [Utilisateurs](#utilisateurs)
+- [Architecture](#architecture)
+  - [Architecture Backend](#architecture-backend)
+  - [Architecture Frontend](#architecture-frontend)
+  - [Sécurité des données](#sécurité-des-données)
+- [Structure du code](#structure-du-code)
+  - [Structure Backend](#structure-backend)
+  - [Structure Frontend](#structure-frontend)
+- [Conventions de code](#conventions-de-code)
 - [Tests](#tests)
   - [Tests Backend](#tests-backend)
   - [Tests Frontend](#tests-frontend)
 - [FAQ Utilisateur](#faq-utilisateur)
-
----
-
-## Architecture
-
-### Architecture Backend
-
-L'application backend suit une architecture en couches (Layered Architecture) respectant les principes SOLID et les bonnes pratiques Spring Boot.
-
-#### Structure en couches
-
-```
-back/
-├── src/main/java/com/openclassrooms/mddapi/
-│   ├── controllers/       # Couche présentation (API REST)
-│   │   ├── AuthController.java
-│   │   ├── TopicController.java
-│   │   ├── PostController.java
-│   │   ├── CommentController.java
-│   │   └── UserController.java
-│   │
-│   ├── services/          # Couche métier (Business Logic)
-│   │   ├── TopicService.java
-│   │   ├── PostService.java
-│   │   ├── CommentService.java
-│   │   ├── UserService.java
-│   │   └── auth/
-│   │       ├── RegisterService.java
-│   │       ├── LoginService.java
-│   │       └── CurrentUserService.java
-│   │
-│   ├── repositories/      # Couche accès données (JPA)
-│   │   ├── TopicRepository.java
-│   │   ├── PostRepository.java
-│   │   ├── CommentRepository.java
-│   │   └── UserRepository.java
-│   │
-│   ├── entities/          # Modèles de données
-│   │   ├── Topic.java
-│   │   ├── Post.java
-│   │   ├── Comment.java
-│   │   └── User.java
-│   │
-│   ├── dto/               # Data Transfer Objects
-│   │   ├── requests/      # DTOs pour les requêtes
-│   │   └── responses/     # DTOs pour les réponses
-│   │
-│   ├── config/            # Configuration Spring
-│   │   ├── SecurityConfig.java
-│   │   ├── JpaConfig.java
-│   │   └── OpenApiConfig.java
-│   │
-│   ├── filter/            # Filtres de sécurité
-│   │   └── JwtAuthenticationFilter.java
-│   │
-│   ├── util/              # Utilitaires
-│   │   └── JwtUtils.java
-│   │
-│   └── exceptions/        # Gestion des exceptions
-│       ├── ResourceNotFoundException.java
-│       ├── BadRequestException.java
-│       └── UnauthorizedException.java
-```
-
-#### Flux de données
-
-1. **Requête HTTP** → `Controller` (validation des entrées)
-2. `Controller` → `Service` (logique métier)
-3. `Service` → `Repository` (accès base de données)
-4. `Repository` → **Base de données MySQL**
-5. Retour avec transformation en **DTO** pour la réponse
-
-#### Technologies clés
-
-- **Spring Boot 3.2.0**: Framework principal
-- **Spring Security**: Authentification et autorisation
-- **Spring Data JPA**: ORM et accès données
-- **Hibernate**: Implémentation JPA
-- **JWT (jjwt 0.12.3)**: Tokens d'authentification
-- **MySQL Connector**: Driver JDBC
-- **Lombok**: Réduction du code boilerplate
-- **OpenAPI/Swagger**: Documentation API
-
----
-
-### Architecture Frontend
-
-L'application frontend suit l'architecture Angular avec une séparation claire des responsabilités.
-
-#### Structure des composants
-
-```
-front/src/app/
-├── components/            # Composants réutilisables
-│   ├── header/           # En-tête de navigation
-│   ├── topic-card/       # Carte d'affichage de thème
-│   ├── post-card/        # Carte d'affichage d'article
-│   └── comment-item/     # Élément de commentaire
-│
-├── pages/                # Pages de l'application
-│   ├── home/            # Page d'accueil
-│   ├── auth/            # Pages d'authentification
-│   │   ├── login/
-│   │   └── register/
-│   ├── feed/            # Fil d'actualité
-│   ├── topics/          # Liste des thèmes
-│   ├── post-detail/     # Détail d'un article
-│   ├── create-post/     # Création d'article
-│   └── profile/         # Profil utilisateur
-│
-├── services/             # Services Angular
-│   ├── auth.service.ts  # Gestion authentification
-│   ├── topic.service.ts # Gestion des thèmes
-│   ├── post.service.ts  # Gestion des articles
-│   └── comment.service.ts # Gestion des commentaires
-│
-├── guards/              # Guards de navigation
-│   └── auth.guard.ts   # Protection des routes
-│
-├── interceptors/        # Intercepteurs HTTP
-│   └── jwt.interceptor.ts # Injection du token JWT
-│
-├── models/              # Interfaces TypeScript
-│   ├── user.model.ts
-│   ├── topic.model.ts
-│   ├── post.model.ts
-│   └── comment.model.ts
-│
-└── shared/              # Modules partagés
-    └── material.module.ts # Imports Angular Material
-```
-
-#### Flux de données Angular
-
-1. **Composant** déclenche une action utilisateur
-2. **Service** effectue l'appel HTTP via HttpClient
-3. **Interceptor** ajoute le token JWT automatiquement
-4. **Backend API** traite la requête
-5. **Service** reçoit la réponse (Observable)
-6. **Composant** met à jour la vue avec les données
-
-#### Technologies clés
-
-- **Angular 14.1.3**: Framework SPA
-- **Angular Material**: Composants UI
-- **RxJS**: Programmation réactive
-- **TypeScript**: Typage statique
-- **SCSS**: Styles avancés
-- **Angular Router**: Navigation
-- **HttpClient**: Communication HTTP
-
----
-
-### Sécurité des données
-
-#### Backend - Sécurité multicouche
-
-##### 1. Authentification JWT
-
-```java
-// Génération du token avec informations utilisateur
-String jwt = jwtUtils.generateTokenFromUsername(user.getEmail());
-
-// Token contient:
-// - Subject: Email utilisateur
-// - Expiration: 24 heures
-// - Signature: HMAC-SHA256
-```
-
-**Sécurisation**:
-
-- Secret JWT stocké dans `application.properties` (min 256 bits)
-- Token signé avec HMAC-SHA256
-- Expiration automatique après 24h
-- Token validé à chaque requête
-
-##### 2. Hashage des mots de passe
-
-```java
-// Utilisation de BCrypt via Spring Security
-@Bean
-public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-}
-
-// Encodage lors de l'inscription
-user.setPassword(passwordEncoder.encode(rawPassword));
-```
-
-**Sécurisation**:
-
-- BCrypt avec salt automatique
-- Coût de calcul élevé (protection contre brute-force)
-- Pas de stockage en clair
-- Comparaison sécurisée avec `matches()`
-
-##### 3. Protection CSRF et CORS
-
-```java
-@Configuration
-public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        http
-            .csrf().disable()  // Désactivé pour API REST
-            .cors()            // CORS configuré
-            .and()
-            .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated();
-    }
-}
-```
-
-##### 4. Validation des entrées
-
-```java
-// Validation avec Bean Validation
-public class RegisterRequest {
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    private String email;
-
-    @Size(min = 6, max = 100)
-    private String password;
-}
-```
-
-##### 5. Gestion des exceptions sécurisée
-
-```java
-// Pas d'exposition de stacktraces en production
-@ExceptionHandler(Exception.class)
-public ResponseEntity<?> handleException(Exception ex) {
-    // Log détaillé côté serveur
-    logger.error("Error occurred", ex);
-
-    // Message générique côté client
-    return ResponseEntity.status(500)
-        .body("Une erreur est survenue");
-}
-```
-
-#### Frontend - Sécurité côté client
-
-##### 1. Stockage sécurisé du token
-
-```typescript
-// LocalStorage avec token JWT
-localStorage.setItem("token", response.token);
-
-// Lecture et validation
-const token = localStorage.getItem("token");
-if (token && !this.isTokenExpired(token)) {
-  // Utiliser le token
-}
-```
-
-**Limitations du localStorage**:
-
-- Vulnérable aux attaques XSS
-- Accessible via JavaScript
-- Alternative: HttpOnly cookies (plus sécurisé)
-
-##### 2. Intercepteur JWT
-
-```typescript
-@Injectable()
-export class JwtInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-    return next.handle(req);
-  }
-}
-```
-
-##### 3. Guards de navigation
-
-```typescript
-@Injectable()
-export class AuthGuard implements CanActivate {
-  canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
-      return true;
-    }
-    this.router.navigate(["/login"]);
-    return false;
-  }
-}
-```
-
-##### 4. Sanitization des données
-
-```typescript
-// Angular sanitize automatiquement dans les templates
-// Évite les injections XSS
-<div [innerHTML]="sanitizedContent"></div>
-
-// Pour le HTML dynamique
-constructor(private sanitizer: DomSanitizer) {}
-sanitizedContent = this.sanitizer.sanitize(
-  SecurityContext.HTML,
-  userInput
-);
-```
-
-#### Base de données - Sécurité MySQL
-
-##### 1. Connexion sécurisée
-
-```properties
-# Credentials en variables d'environnement (production)
-spring.datasource.url=jdbc:mysql://${DB_HOST}:3306/mdd_db?useSSL=true
-spring.datasource.username=${DB_USER}
-spring.datasource.password=${DB_PASSWORD}
-```
-
-##### 2. Protection contre SQL Injection
-
-```java
-// JPA utilise des PreparedStatements automatiquement
-@Query("SELECT p FROM Post p WHERE p.author.id = :authorId")
-List<Post> findByAuthorId(@Param("authorId") Long authorId);
-
-// Les paramètres sont échappés automatiquement
-```
-
-##### 3. Principe du moindre privilège
-
-```sql
--- Utilisateur avec droits limités
-CREATE USER 'mdd_app'@'localhost' IDENTIFIED BY 'password';
-GRANT SELECT, INSERT, UPDATE, DELETE ON mdd_db.* TO 'mdd_app'@'localhost';
--- Pas de DROP, CREATE, ALTER en production
-```
-
-#### Checklist de sécurité
-
-- ✅ Authentification JWT avec expiration
-- ✅ Mots de passe hashés avec BCrypt
-- ✅ Validation des entrées (Bean Validation)
-- ✅ Protection CSRF désactivée (API REST)
-- ✅ CORS configuré
-- ✅ HTTPS recommandé en production
-- ✅ Secrets dans variables d'environnement
-- ✅ Logs sans données sensibles
-- ✅ Guards de navigation Angular
-- ✅ Intercepteur JWT automatique
-- ✅ SQL Injection protégé (JPA)
-- ✅ XSS protégé (Angular sanitization)
-
----
-
-### Backend
-
-- **Framework**: Spring Boot 3.2.0
-- **Java**: 17
-- **Base de données**: MySQL
-- **Sécurité**: Spring Security + JWT
-- **Tests**: JUnit 5, Mockito
-- **Couverture**: JaCoCo (77% de couverture)
-
-### Frontend
-
-- **Framework**: Angular 14.1.3
-- **UI Library**: Angular Material
-- **Style**: SCSS
-- **Tests**: Jest/Karma
 
 ---
 
@@ -1957,6 +1582,363 @@ Authorization: Bearer <token>
 **Erreurs possibles**:
 
 - `404 Not Found`: Utilisateur non trouvé
+
+---
+
+## Architecture
+
+### Architecture Backend
+
+L'application backend suit une architecture en couches (Layered Architecture) respectant les principes SOLID et les bonnes pratiques Spring Boot.
+
+#### Structure en couches
+
+```
+back/
+├── src/main/java/com/openclassrooms/mddapi/
+│   ├── controllers/       # Couche présentation (API REST)
+│   │   ├── AuthController.java
+│   │   ├── TopicController.java
+│   │   ├── PostController.java
+│   │   ├── CommentController.java
+│   │   └── UserController.java
+│   │
+│   ├── services/          # Couche métier (Business Logic)
+│   │   ├── TopicService.java
+│   │   ├── PostService.java
+│   │   ├── CommentService.java
+│   │   ├── UserService.java
+│   │   └── auth/
+│   │       ├── RegisterService.java
+│   │       ├── LoginService.java
+│   │       └── CurrentUserService.java
+│   │
+│   ├── repositories/      # Couche accès données (JPA)
+│   │   ├── TopicRepository.java
+│   │   ├── PostRepository.java
+│   │   ├── CommentRepository.java
+│   │   └── UserRepository.java
+│   │
+│   ├── entities/          # Modèles de données
+│   │   ├── Topic.java
+│   │   ├── Post.java
+│   │   ├── Comment.java
+│   │   └── User.java
+│   │
+│   ├── dto/               # Data Transfer Objects
+│   │   ├── requests/      # DTOs pour les requêtes
+│   │   └── responses/     # DTOs pour les réponses
+│   │
+│   ├── config/            # Configuration Spring
+│   │   ├── SecurityConfig.java
+│   │   ├── JpaConfig.java
+│   │   └── OpenApiConfig.java
+│   │
+│   ├── filter/            # Filtres de sécurité
+│   │   └── JwtAuthenticationFilter.java
+│   │
+│   ├── util/              # Utilitaires
+│   │   └── JwtUtils.java
+│   │
+│   └── exceptions/        # Gestion des exceptions
+│       ├── ResourceNotFoundException.java
+│       ├── BadRequestException.java
+│       └── UnauthorizedException.java
+```
+
+#### Flux de données
+
+1. **Requête HTTP** → `Controller` (validation des entrées)
+2. `Controller` → `Service` (logique métier)
+3. `Service` → `Repository` (accès base de données)
+4. `Repository` → **Base de données MySQL**
+5. Retour avec transformation en **DTO** pour la réponse
+
+#### Technologies clés
+
+- **Spring Boot 3.2.0**: Framework principal
+- **Spring Security**: Authentification et autorisation
+- **Spring Data JPA**: ORM et accès données
+- **Hibernate**: Implémentation JPA
+- **JWT (jjwt 0.12.3)**: Tokens d'authentification
+- **MySQL Connector**: Driver JDBC
+- **Lombok**: Réduction du code boilerplate
+- **OpenAPI/Swagger**: Documentation API
+
+---
+
+### Architecture Frontend
+
+L'application frontend suit l'architecture Angular avec une séparation claire des responsabilités.
+
+#### Structure des composants
+
+```
+front/src/app/
+├── components/            # Composants réutilisables
+│   ├── header/           # En-tête de navigation
+│   ├── topic-card/       # Carte d'affichage de thème
+│   ├── post-card/        # Carte d'affichage d'article
+│   └── comment-item/     # Élément de commentaire
+│
+├── pages/                # Pages de l'application
+│   ├── home/            # Page d'accueil
+│   ├── auth/            # Pages d'authentification
+│   │   ├── login/
+│   │   └── register/
+│   ├── feed/            # Fil d'actualité
+│   ├── topics/          # Liste des thèmes
+│   ├── post-detail/     # Détail d'un article
+│   ├── create-post/     # Création d'article
+│   └── profile/         # Profil utilisateur
+│
+├── services/             # Services Angular
+│   ├── auth.service.ts  # Gestion authentification
+│   ├── topic.service.ts # Gestion des thèmes
+│   ├── post.service.ts  # Gestion des articles
+│   └── comment.service.ts # Gestion des commentaires
+│
+├── guards/              # Guards de navigation
+│   └── auth.guard.ts   # Protection des routes
+│
+├── interceptors/        # Intercepteurs HTTP
+│   └── jwt.interceptor.ts # Injection du token JWT
+│
+├── models/              # Interfaces TypeScript
+│   ├── user.model.ts
+│   ├── topic.model.ts
+│   ├── post.model.ts
+│   └── comment.model.ts
+│
+└── shared/              # Modules partagés
+    └── material.module.ts # Imports Angular Material
+```
+
+#### Flux de données Angular
+
+1. **Composant** déclenche une action utilisateur
+2. **Service** effectue l'appel HTTP via HttpClient
+3. **Interceptor** ajoute le token JWT automatiquement
+4. **Backend API** traite la requête
+5. **Service** reçoit la réponse (Observable)
+6. **Composant** met à jour la vue avec les données
+
+#### Technologies clés
+
+- **Angular 14.1.3**: Framework SPA
+- **Angular Material**: Composants UI
+- **RxJS**: Programmation réactive
+- **TypeScript**: Typage statique
+- **SCSS**: Styles avancés
+- **Angular Router**: Navigation
+- **HttpClient**: Communication HTTP
+
+---
+
+### Sécurité des données
+
+#### Backend - Sécurité multicouche
+
+##### 1. Authentification JWT
+
+```java
+// Génération du token avec informations utilisateur
+String jwt = jwtUtils.generateTokenFromUsername(user.getEmail());
+
+// Token contient:
+// - Subject: Email utilisateur
+// - Expiration: 24 heures
+// - Signature: HMAC-SHA256
+```
+
+**Sécurisation**:
+
+- Secret JWT stocké dans `application.properties` (min 256 bits)
+- Token signé avec HMAC-SHA256
+- Expiration automatique après 24h
+- Token validé à chaque requête
+
+##### 2. Hashage des mots de passe
+
+```java
+// Utilisation de BCrypt via Spring Security
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+
+// Encodage lors de l'inscription
+user.setPassword(passwordEncoder.encode(rawPassword));
+```
+
+**Sécurisation**:
+
+- BCrypt avec salt automatique
+- Coût de calcul élevé (protection contre brute-force)
+- Pas de stockage en clair
+- Comparaison sécurisée avec `matches()`
+
+##### 3. Protection CSRF et CORS
+
+```java
+@Configuration
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) {
+        http
+            .csrf().disable()  // Désactivé pour API REST
+            .cors()            // CORS configuré
+            .and()
+            .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated();
+    }
+}
+```
+
+##### 4. Validation des entrées
+
+```java
+// Validation avec Bean Validation
+public class RegisterRequest {
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
+    private String email;
+
+    @Size(min = 6, max = 100)
+    private String password;
+}
+```
+
+##### 5. Gestion des exceptions sécurisée
+
+```java
+// Pas d'exposition de stacktraces en production
+@ExceptionHandler(Exception.class)
+public ResponseEntity<?> handleException(Exception ex) {
+    // Log détaillé côté serveur
+    logger.error("Error occurred", ex);
+
+    // Message générique côté client
+    return ResponseEntity.status(500)
+        .body("Une erreur est survenue");
+}
+```
+
+#### Frontend - Sécurité côté client
+
+##### 1. Stockage sécurisé du token
+
+```typescript
+// LocalStorage avec token JWT
+localStorage.setItem("token", response.token);
+
+// Lecture et validation
+const token = localStorage.getItem("token");
+if (token && !this.isTokenExpired(token)) {
+  // Utiliser le token
+}
+```
+
+**Limitations du localStorage**:
+
+- Vulnérable aux attaques XSS
+- Accessible via JavaScript
+- Alternative: HttpOnly cookies (plus sécurisé)
+
+##### 2. Intercepteur JWT
+
+```typescript
+@Injectable()
+export class JwtInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+    return next.handle(req);
+  }
+}
+```
+
+##### 3. Guards de navigation
+
+```typescript
+@Injectable()
+export class AuthGuard implements CanActivate {
+  canActivate(): boolean {
+    if (this.authService.isAuthenticated()) {
+      return true;
+    }
+    this.router.navigate(["/login"]);
+    return false;
+  }
+}
+```
+
+##### 4. Sanitization des données
+
+```typescript
+// Angular sanitize automatiquement dans les templates
+// Évite les injections XSS
+<div [innerHTML]="sanitizedContent"></div>
+
+// Pour le HTML dynamique
+constructor(private sanitizer: DomSanitizer) {}
+sanitizedContent = this.sanitizer.sanitize(
+  SecurityContext.HTML,
+  userInput
+);
+```
+
+#### Base de données - Sécurité MySQL
+
+##### 1. Connexion sécurisée
+
+```properties
+# Credentials en variables d'environnement (production)
+spring.datasource.url=jdbc:mysql://${DB_HOST}:3306/mdd_db?useSSL=true
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
+```
+
+##### 2. Protection contre SQL Injection
+
+```java
+// JPA utilise des PreparedStatements automatiquement
+@Query("SELECT p FROM Post p WHERE p.author.id = :authorId")
+List<Post> findByAuthorId(@Param("authorId") Long authorId);
+
+// Les paramètres sont échappés automatiquement
+```
+
+##### 3. Principe du moindre privilège
+
+```sql
+-- Utilisateur avec droits limités
+CREATE USER 'mdd_app'@'localhost' IDENTIFIED BY 'password';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mdd_db.* TO 'mdd_app'@'localhost';
+-- Pas de DROP, CREATE, ALTER en production
+```
+
+#### Checklist de sécurité
+
+- ✅ Authentification JWT avec expiration
+- ✅ Mots de passe hashés avec BCrypt
+- ✅ Validation des entrées (Bean Validation)
+- ✅ Protection CSRF désactivée (API REST)
+- ✅ CORS configuré
+- ✅ HTTPS recommandé en production
+- ✅ Secrets dans variables d'environnement
+- ✅ Logs sans données sensibles
+- ✅ Guards de navigation Angular
+- ✅ Intercepteur JWT automatique
+- ✅ SQL Injection protégé (JPA)
+- ✅ XSS protégé (Angular sanitization)
 
 ---
 
